@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Engagement Invitation - Youssef & Jana</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:ital,wght@1,400&family=Inter:wght@400;700;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           1. FONTS & OFF-WHITE FLORAL VARIABLES
+           ========================================= */
+        :root {
+            --offwhite: #F8F6F0;    
+            --rose: #a67b82;        
+            --rose-light: rgba(166, 123, 130, 0.15);   
+            --text-dark: #2c2c2c;   
+            --text-muted: #666666;      
+            --white: #ffffff;
+            --border-color: rgba(166, 123, 130, 0.3);
+            --card-bg: rgba(255, 255, 255, 0.75); 
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { scroll-behavior: auto; } 
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark); 
+            background-color: var(--offwhite);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* DYNAMIC RESPONSIVE BACKGROUND IMAGE */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("pc_background.webp"); 
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            z-index: -1;
+            box-shadow: inset 0 0 0 2000px rgba(255, 255, 255, 0.3);
+        }
+
+        @media screen and (max-width: 768px) {
+            body::before {
+                background-image: url("mobile_background.webp");
+                background-position: top center;
+            }
+        }
+
+        /* =========================================
+           2. SOLID OPAQUE OVERLAY & OPEN BUTTON
+           ========================================= */
+        #blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--offwhite); 
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease; 
+        }
+
+        .open-circle-btn {
+            width: 140px;
+            height: 140px;
+            background: var(--white);
+            color: var(--rose); 
+            border-radius: 50%;
+            border: 3px solid var(--rose); 
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(166, 123, 130, 0.2); 
+            transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        .open-circle-btn:hover {
+            transform: scale(1.05);
+            background: var(--rose);
+            color: var(--white);
+            box-shadow: 0 15px 40px rgba(166, 123, 130, 0.4);
+        }
+
+        /* =========================================
+           3. MAIN CONTENT
+           ========================================= */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 80px 20px 150px 20px;
+            margin: 0 auto;
+        }
+
+        .title { 
+            font-family: 'Cinzel', serif; 
+            font-size: 30px; 
+            letter-spacing: 5px; 
+            margin-bottom: 10px; 
+            text-transform: uppercase;
+            color: var(--rose);
+        }
+
+        .announcement { 
+            font-size: 12px; 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            line-height: 1.6; 
+            margin-bottom: 20px; 
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .blue-line { 
+            width: 40px; 
+            height: 1px; 
+            background-color: var(--rose); 
+            margin: 0 auto 30px; 
+        }
+
+        .mini-blue-line { 
+            width: 45px; 
+            height: 2px; 
+            background-color: var(--rose);  
+            margin: 40px auto 15px; 
+        }
+
+        .names-stack { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 4px; 
+            margin-bottom: 50px; 
+        }
+
+        .main-name { 
+            font-family: 'Cinzel', serif; 
+            font-size: 34px; 
+            letter-spacing: 6px; 
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .role { 
+            font-size: 11px; 
+            font-weight: 700; 
+            letter-spacing: 3px; 
+            color: var(--text-muted);
+        }
+
+        .small-ampersand { 
+            font-family: 'Playfair Display', serif; 
+            font-style: italic; 
+            font-size: 28px; 
+            color: var(--rose);
+        }
+
+        /* =========================================
+           4. GALLERY, INFO & CALENDAR SECTIONS
+           ========================================= */
+        .gallery-title { 
+            font-family: 'Cinzel', serif; 
+            font-size: 24px; 
+            letter-spacing: 5px; 
+            margin-bottom: 25px; 
+            font-weight: 700; 
+            color: var(--rose);
+        }
+
+        .photo-grid { 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 50px; 
+        }
+
+        .photo-placeholder { 
+            background: var(--white); 
+            border-radius: 15px; 
+            overflow: hidden; 
+            width: 100%;
+            max-width: 300px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            border: 4px solid var(--white);
+        }
+
+        .photo-placeholder img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            display: block;
+        }
+
+        .reception-section { margin-bottom: 30px; }
+        .big-time { display: block; font-size: 40px; font-weight: 800; color: var(--text-dark); }
+        .big-date { display: block; font-size: 16px; font-weight: 700; letter-spacing: 1px; margin: 10px 0 20px; color: var(--text-muted); }
+
+        .calendar-wrapper { 
+            width: 100%; 
+            max-width: 360px; 
+            margin: 20px auto 50px auto; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(166, 123, 130, 0.15); 
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .calendar-wrapper img { 
+            width: 100%; 
+            display: block;
+        }
+
+        .venue-name { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--text-dark); }
+        .venue-location { font-size: 14px; line-height: 1.6; margin: 5px 0 15px; color: var(--text-muted); }
+
+        .map-link-btn {
+            display: inline-block;
+            padding: 14px 45px;
+            background: transparent;
+            border: 1.5px solid var(--rose);
+            color: var(--rose);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .map-link-btn:hover {
+            background: var(--rose-light);
+        }
+
+        /* =========================================
+           5. GUESTBOOK SECTION & BUTTONS
+           ========================================= */
+        .guestbook-section {
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+
+        .guestbook-form { 
+            max-width: 350px; 
+            margin: 20px auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
+
+        .guestbook-form input, 
+        .guestbook-form textarea { 
+            padding: 15px; 
+            border-radius: 15px; 
+            border: 1px solid var(--border-color); 
+            background: var(--card-bg);
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif; 
+            font-size: 15px; 
+            width: 100%;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .guestbook-form input::placeholder, 
+        .guestbook-form textarea::placeholder { 
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .guestbook-form input:focus, 
+        .guestbook-form textarea:focus {
+            border-color: var(--rose);
+            box-shadow: 0 0 10px var(--rose-light);
+        }
+
+        .oval-btn-small { 
+            padding: 15px; 
+            background: var(--rose); 
+            color: var(--white); 
+            border-radius: 50px; 
+            border: none; 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .oval-btn-small:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--rose-light);
+        }
+
+        .wish-card {
+            position: relative;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .wish-card h4 { 
+            font-size: 14px; 
+            font-weight: 800; 
+            color: var(--rose);
+            text-transform: uppercase; 
+            margin-bottom: 5px;
+        }
+
+        .wish-card p {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+        
+        .oval-btn { 
+            display: inline-block; 
+            padding: 16px 70px; 
+            background: transparent; 
+            color: var(--rose); 
+            border: 1px solid var(--rose);
+            border-radius: 50px; 
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 800; 
+            margin-top: 40px; 
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .oval-btn:hover {
+            background: var(--rose-light);
+        }
+
+        /* =========================================
+           6. MIRZAM CREDIT FOOTER 
+           ========================================= */
+        .credit-badge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+            padding-bottom: 20px;
+            gap: 10px;
+        }
+
+        .made-by-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: lowercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .mirzam-circular-logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 2px solid var(--rose);
+            box-shadow: 0 4px 15px rgba(166, 123, 130, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .mirzam-circular-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(166, 123, 130, 0.4);
+        }
+
+        /* =========================================
+           7. FLOATING TAB BAR
+           ========================================= */
+        .floating-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px);
+            height: 70px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: var(--text-muted); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--rose); 
+        }
+
+        .nav-item i { font-size: 20px; }
+        .nav-item span { font-size: 11px; font-weight: 800; text-transform: uppercase; }
+
+        @media screen and (max-width: 768px) {
+            .main-content { padding: 40px 15px 140px 15px; }
+            .title { font-size: 24px; }
+            .main-name { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- COMPLETELY OPAQUE OVERLAY -->
+    <div id="blur-overlay">
+        <button class="open-circle-btn" onclick="openInvitation()">Open</button>
+    </div>
+
+    <!-- AUDIO ELEMENT -->
+    <audio id="weddingMusic" loop>
+        <source src="wedding-song.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="main-content-section">
+        <h1 class="title">ENGAGEMENT INFO</h1>
+        
+        <p class="announcement">You are invited to the<br>engagement party of</p>
+        <div class="blue-line"></div>
+
+        <div class="names-stack">
+            <h2 class="main-name">YOUSSEF</h2>
+            <span class="role">FIANCÉ</span>
+            <span class="small-ampersand">&</span>
+            <h2 class="main-name">JANA</h2>
+            <span class="role">FIANCÉE</span>
+        </div>
+
+        <div class="gallery-section" id="gallery-section">
+            <h3 class="gallery-title">PHOTO GALLERY</h3>
+            <div class="photo-grid">
+                <div class="photo-placeholder">
+                    <img src="youssef-jana.webp" alt="Youssef and Jana">
+                </div>
+            </div>
+        </div>
+
+        <div class="reception-section" id="reception-section">
+            <div class="mini-blue-line"></div>
+            <h2 class="gallery-title">EVENT INFO</h2>
+            <div class="time-date-box">
+                <span class="big-time">08:00 PM</span>
+                <span class="big-date">FRIDAY | SEPTEMBER | 04</span>
+            </div>
+        </div>
+
+        <!-- NEW CALENDAR SECTION -->
+        <div class="calendar-wrapper">
+            <img src="date.webp" alt="September 2026 Calendar">
+        </div>
+
+        <div class="venue-section" id="venue-section">
+            <div class="mini-blue-line"></div> 
+            <h3 class="gallery-title">VENUE LOCATION</h3>
+            <p class="venue-name">THE BRIDE'S HOUSE</p>
+            <p class="venue-location">Msaken El Zobat<br>El Remaya, Giza</p>
+            <a href="https://maps.app.goo.gl/sePQeYgAeawFrKrE6?g_st=ic" target="_blank" class="map-link-btn">VIEW ON MAP</a>
+        </div>
+
+        <!-- GUESTBOOK SECTION -->
+        <div class="guestbook-section" id="guestbook-section">
+            <div class="mini-blue-line"></div>
+            <h3 class="gallery-title">GUESTBOOK</h3>
+            <p class="announcement" style="margin-bottom: 20px;">Leave your blessings & wishes for the couple</p>
+            
+            <form id="guestbook-form" class="guestbook-form">
+                <input type="text" id="guest-name" placeholder="Your Name" required>
+                <textarea id="guest-wish" placeholder="Write your wishes here..." rows="4" required></textarea>
+                <button type="submit" class="oval-btn-small">SEND WISHES</button>
+            </form>
+            <div id="wishes-display" class="wishes-container"></div>
+        </div>
+        
+        <!-- GO BACK BUTTON -->
+        <button onclick="window.location.reload()" class="oval-btn">GO BACK</button>
+        
+        <!-- MIRZAM CREDIT BADGE -->
+        <div class="credit-badge-container">
+            <span class="made-by-text">made by Mirzam</span> 
+            <a href="https://mirzaminvitationcards-ops.github.io/mirzam.eg/Mirzam's_Main_page" target="_blank">
+                <img src="Mirazam's-logo.webp" alt="Mirzam Logo" class="mirzam-circular-logo">
+            </a>
+        </div>
+    </div>
+
+    <!-- FLOATING NAVIGATION -->
+    <nav class="floating-nav">
+        <div class="nav-container">
+            <a href="javascript:void(0)" onclick="scrollToSection('gallery-section')" class="nav-item">
+                <i class="far fa-images"></i><span>Gallery</span>
+            </a>
+            <a href="javascript:void(0)" onclick="scrollToSection('venue-section')" class="nav-item">
+                <i class="fas fa-map-marker-alt"></i><span>Location</span>
+            </a>
+            <a href="javascript:void(0)" onclick="scrollToSection('guestbook-section')" class="nav-item">
+                <i class="far fa-comment-dots"></i><span>Wishes</span>
+            </a>
+            <div class="nav-item" onclick="toggleMusic()" style="cursor:pointer;">
+                <i id="navMusicIcon" class="fas fa-pause"></i>
+                <span id="navMusicText">Stop</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FIREBASE & SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Disable automatic scroll restoration to ensure page always loads at the top
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+
+        let myUserId = localStorage.getItem('wedding_user_id') || 'user_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('wedding_user_id', myUserId);
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCB5tx5ffwZENpTqU9otGTvxjmlgqyjwQ",
+            authDomain: "ismail-yara-wedding.firebaseapp.com",
+            projectId: "ismail-yara-wedding",
+            storageBucket: "ismail-yara-wedding.firebasestorage.app",
+            messagingSenderId: "192107873346",
+            appId: "1:192107873346:web:db146674f6632ffb3759db"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const weddingAudio = document.getElementById("weddingMusic");
+        const navMusicIcon = document.getElementById("navMusicIcon");
+        const navMusicText = document.getElementById("navMusicText");
+
+        let autoScrollId;
+        let isAutoScrolling = false;
+
+        function stopAutoScroll(e) {
+            if (e && e.target && e.target.closest('[onclick="toggleMusic()"]')) {
+                return; 
+            }
+
+            if (isAutoScrolling) {
+                isAutoScrolling = false;
+                cancelAnimationFrame(autoScrollId);
+                
+                window.removeEventListener('wheel', stopAutoScroll);
+                window.removeEventListener('touchmove', stopAutoScroll);
+                window.removeEventListener('mousedown', stopAutoScroll);
+                window.removeEventListener('touchstart', stopAutoScroll); 
+                document.removeEventListener('keydown', stopAutoScroll);
+            }
+        }
+
+        // OPEN INVITATION LOGIC WITH TRACKER
+        function openInvitation() {
+            const overlay = document.getElementById('blur-overlay');
+            
+            // TRACKER
+            db.collection("yj_engagement_opens").doc(myUserId).set({
+                lastOpened: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).catch(err => console.log("Tracking error", err));
+
+            weddingAudio.play().then(() => {
+                updateMusicUI();
+            }).catch(e => console.log("Audio playback failed:", e));
+
+            overlay.style.opacity = '0';
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                
+                isAutoScrolling = true;
+                
+                window.addEventListener('wheel', stopAutoScroll, { passive: true });       
+                window.addEventListener('touchmove', stopAutoScroll, { passive: true });   
+                window.addEventListener('touchstart', stopAutoScroll, { passive: true }); 
+                window.addEventListener('mousedown', stopAutoScroll, { passive: true });   
+                document.addEventListener('keydown', stopAutoScroll, { passive: true });   
+
+                function autoScroll() {
+                    if (isAutoScrolling && (window.innerHeight + Math.ceil(window.scrollY) < document.documentElement.scrollHeight)) {
+                        window.scrollBy(0, 1); 
+                        autoScrollId = requestAnimationFrame(autoScroll);
+                    }
+                }
+                
+                autoScroll();
+                
+            }, 1000); 
+        }
+
+        // NAV BAR SCROLL 
+        function scrollToSection(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                stopAutoScroll(); 
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function toggleMusic() {
+            if (weddingAudio.paused) {
+                weddingAudio.play().then(updateMusicUI).catch(e => console.log("Playback error"));
+            } else {
+                weddingAudio.pause();
+                updateMusicUI();
+            }
+        }
+
+        function updateMusicUI() {
+            if (weddingAudio.paused) {
+                if (navMusicIcon) navMusicIcon.className = "fas fa-play";
+                if (navMusicText) navMusicText.innerText = "Play";
+            } else {
+                if (navMusicIcon) navMusicIcon.className = "fas fa-pause";
+                if (navMusicText) navMusicText.innerText = "Pause";
+            }
+        }
+
+        /* --- DEDICATED GUESTBOOK LOGIC (yj_wishes) --- */
+        const wishForm = document.getElementById('guestbook-form');
+        const wishesDisplay = document.getElementById('wishes-display');
+
+        wishForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            db.collection("yj_wishes").add({
+                ownerId: myUserId,
+                name: document.getElementById('guest-name').value,
+                wish: document.getElementById('guest-wish').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                wishForm.reset(); 
+            }).catch((error) => console.error("Error writing document: ", error));
+        });
+
+        db.collection("yj_wishes").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+            wishesDisplay.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const item = doc.data();
+                const card = document.createElement('div');
+                card.className = 'wish-card';
+                card.innerHTML = `<h4>${item.name}</h4><p>"${item.wish}"</p>`;
+                wishesDisplay.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
