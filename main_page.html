@@ -186,7 +186,7 @@
         }
 
         /* =========================================
-           4. GALLERY, INFO & CALENDAR SECTIONS
+           4. GALLERY, INFO, COUNTDOWN & CALENDAR
            ========================================= */
         .gallery-title { 
             font-family: 'Cinzel', serif; 
@@ -224,10 +224,49 @@
         .big-time { display: block; font-size: 40px; font-weight: 800; color: var(--text-dark); }
         .big-date { display: block; font-size: 16px; font-weight: 700; letter-spacing: 1px; margin: 10px 0 20px; color: var(--text-muted); }
 
+        /* --- NEW COUNTDOWN STYLES --- */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .time-unit {
+            background: var(--white);
+            padding: 12px 0;
+            border-radius: 12px;
+            width: 75px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(166, 123, 130, 0.15);
+            border: 1px solid var(--border-color);
+        }
+
+        .time-unit span {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 5px;
+            color: var(--rose);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .time-unit label { 
+            font-size: 9px; 
+            font-weight: 800; 
+            color: var(--text-muted); 
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .calendar-wrapper { 
             width: 100%; 
             max-width: 360px; 
-            margin: 20px auto 50px auto; 
+            margin: 30px auto 50px auto; 
             border-radius: 20px; 
             box-shadow: 0 15px 35px rgba(166, 123, 130, 0.15); 
             background: var(--white);
@@ -350,27 +389,27 @@
         }
 
         .delete-wish-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(166, 123, 130, 0.15); /* Matches the rose-light theme */
-    color: var(--rose);
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: 700;
-    text-transform: uppercase;
-    z-index: 10;
-}
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(166, 123, 130, 0.15); 
+            color: var(--rose);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 700;
+            text-transform: uppercase;
+            z-index: 10;
+        }
 
-.delete-wish-btn:hover {
-    background: var(--rose);
-    color: var(--white);
-    transform: scale(1.05);
-}
+        .delete-wish-btn:hover {
+            background: var(--rose);
+            color: var(--white);
+            transform: scale(1.05);
+        }
         
         .oval-btn { 
             display: inline-block; 
@@ -482,6 +521,11 @@
             .main-content { padding: 40px 15px 140px 15px; }
             .title { font-size: 24px; }
             .main-name { font-size: 28px; }
+            
+            /* Squeeze countdown a bit on mobile */
+            .countdown-container { gap: 8px; }
+            .time-unit { width: 65px; padding: 10px 0; }
+            .time-unit span { font-size: 22px; }
         }
     </style>
 </head>
@@ -527,6 +571,14 @@
             <div class="time-date-box">
                 <span class="big-time">08:00 PM</span>
                 <span class="big-date">FRIDAY | SEPTEMBER | 04</span>
+            </div>
+            
+            <!-- NEW COUNTDOWN SECTION -->
+            <div id="countdown" class="countdown-container">
+                <div class="time-unit"><span id="days">00</span><label>Days</label></div>
+                <div class="time-unit"><span id="hours">00</span><label>Hours</label></div>
+                <div class="time-unit"><span id="minutes">00</span><label>Mins</label></div>
+                <div class="time-unit"><span id="seconds">00</span><label>Secs</label></div>
             </div>
         </div>
 
@@ -704,57 +756,65 @@
         }
 
         /* --- DEDICATED GUESTBOOK LOGIC & ADMIN --- */
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') === 'true') {
+            localStorage.setItem('is_wedding_admin', 'true');
+            window.history.replaceState({}, document.title, window.location.pathname);
+            alert("Admin mode activated. You can now delete any message.");
+        }
+        const isAdmin = localStorage.getItem('is_wedding_admin') === 'true';
 
-// 1. Secret Admin URL Check
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('admin') === 'true') {
-    localStorage.setItem('is_wedding_admin', 'true');
-    // Hide the ?admin=true from the URL so it looks normal again
-    window.history.replaceState({}, document.title, window.location.pathname);
-    alert("Admin mode activated. You can now delete any message.");
-}
-const isAdmin = localStorage.getItem('is_wedding_admin') === 'true';
+        const wishForm = document.getElementById('guestbook-form');
+        const wishesDisplay = document.getElementById('wishes-display');
 
-const wishForm = document.getElementById('guestbook-form');
-const wishesDisplay = document.getElementById('wishes-display');
-
-wishForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    db.collection("yj_wishes").add({
-        ownerId: myUserId,
-        name: document.getElementById('guest-name').value,
-        wish: document.getElementById('guest-wish').value,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        wishForm.reset(); 
-    }).catch((error) => console.error("Error writing document: ", error));
-});
-
-db.collection("yj_wishes").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-    wishesDisplay.innerHTML = '';
-    querySnapshot.forEach((doc) => {
-        const item = doc.data();
-        const card = document.createElement('div');
-        card.className = 'wish-card';
-        
-        // Show delete button if the user owns the message OR if they are an admin
-        const deleteBtn = (item.ownerId === myUserId || isAdmin) 
-            ? `<button class="delete-wish-btn" onclick="deleteWish('${doc.id}')">Delete</button>` 
-            : '';
-            
-        card.innerHTML = `<h4>${item.name}</h4><p>"${item.wish}"</p>${deleteBtn}`;
-        wishesDisplay.appendChild(card);
-    });
-});
-
-// Function to delete the wish from Firebase
-window.deleteWish = function(docId) {
-    if (confirm("Delete this message?")) {
-        db.collection("yj_wishes").doc(docId).delete().catch((error) => {
-            console.error("Error removing document: ", error);
+        wishForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            db.collection("yj_wishes").add({
+                ownerId: myUserId,
+                name: document.getElementById('guest-name').value,
+                wish: document.getElementById('guest-wish').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                wishForm.reset(); 
+            }).catch((error) => console.error("Error writing document: ", error));
         });
-    }
-};
+
+        db.collection("yj_wishes").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+            wishesDisplay.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const item = doc.data();
+                const card = document.createElement('div');
+                card.className = 'wish-card';
+                
+                const deleteBtn = (item.ownerId === myUserId || isAdmin) 
+                    ? `<button class="delete-wish-btn" onclick="deleteWish('${doc.id}')">Delete</button>` 
+                    : '';
+                    
+                card.innerHTML = `<h4>${item.name}</h4><p>"${item.wish}"</p>${deleteBtn}`;
+                wishesDisplay.appendChild(card);
+            });
+        });
+
+        window.deleteWish = function(docId) {
+            if (confirm("Delete this message?")) {
+                db.collection("yj_wishes").doc(docId).delete().catch((error) => {
+                    console.error("Error removing document: ", error);
+                });
+            }
+        };
+
+        /* --- COUNTDOWN LOGIC --- */
+        const targetDate = new Date("September 4, 2026 20:00:00").getTime();
+        setInterval(() => {
+            const diff = targetDate - new Date().getTime();
+            if (diff > 0) {
+                document.getElementById("days").innerText = Math.floor(diff / 86400000).toString().padStart(2, '0');
+                document.getElementById("hours").innerText = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            }
+        }, 1000);
+
     </script>
 </body>
 </html>
