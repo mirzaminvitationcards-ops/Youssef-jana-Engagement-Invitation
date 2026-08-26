@@ -348,6 +348,29 @@
             color: var(--text-dark);
             line-height: 1.5;
         }
+
+        .delete-wish-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(166, 123, 130, 0.15); /* Matches the rose-light theme */
+    color: var(--rose);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 700;
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+.delete-wish-btn:hover {
+    background: var(--rose);
+    color: var(--white);
+    transform: scale(1.05);
+}
         
         .oval-btn { 
             display: inline-block; 
@@ -680,32 +703,58 @@
             }
         }
 
-        /* --- DEDICATED GUESTBOOK LOGIC (yj_wishes) --- */
-        const wishForm = document.getElementById('guestbook-form');
-        const wishesDisplay = document.getElementById('wishes-display');
+        /* --- DEDICATED GUESTBOOK LOGIC & ADMIN --- */
 
-        wishForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            db.collection("yj_wishes").add({
-                ownerId: myUserId,
-                name: document.getElementById('guest-name').value,
-                wish: document.getElementById('guest-wish').value,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                wishForm.reset(); 
-            }).catch((error) => console.error("Error writing document: ", error));
-        });
+// 1. Secret Admin URL Check
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('admin') === 'true') {
+    localStorage.setItem('is_wedding_admin', 'true');
+    // Hide the ?admin=true from the URL so it looks normal again
+    window.history.replaceState({}, document.title, window.location.pathname);
+    alert("Admin mode activated. You can now delete any message.");
+}
+const isAdmin = localStorage.getItem('is_wedding_admin') === 'true';
 
-        db.collection("yj_wishes").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-            wishesDisplay.innerHTML = '';
-            querySnapshot.forEach((doc) => {
-                const item = doc.data();
-                const card = document.createElement('div');
-                card.className = 'wish-card';
-                card.innerHTML = `<h4>${item.name}</h4><p>"${item.wish}"</p>`;
-                wishesDisplay.appendChild(card);
-            });
+const wishForm = document.getElementById('guestbook-form');
+const wishesDisplay = document.getElementById('wishes-display');
+
+wishForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    db.collection("yj_wishes").add({
+        ownerId: myUserId,
+        name: document.getElementById('guest-name').value,
+        wish: document.getElementById('guest-wish').value,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        wishForm.reset(); 
+    }).catch((error) => console.error("Error writing document: ", error));
+});
+
+db.collection("yj_wishes").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
+    wishesDisplay.innerHTML = '';
+    querySnapshot.forEach((doc) => {
+        const item = doc.data();
+        const card = document.createElement('div');
+        card.className = 'wish-card';
+        
+        // Show delete button if the user owns the message OR if they are an admin
+        const deleteBtn = (item.ownerId === myUserId || isAdmin) 
+            ? `<button class="delete-wish-btn" onclick="deleteWish('${doc.id}')">Delete</button>` 
+            : '';
+            
+        card.innerHTML = `<h4>${item.name}</h4><p>"${item.wish}"</p>${deleteBtn}`;
+        wishesDisplay.appendChild(card);
+    });
+});
+
+// Function to delete the wish from Firebase
+window.deleteWish = function(docId) {
+    if (confirm("Delete this message?")) {
+        db.collection("yj_wishes").doc(docId).delete().catch((error) => {
+            console.error("Error removing document: ", error);
         });
+    }
+};
     </script>
 </body>
 </html>
